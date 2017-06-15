@@ -1,0 +1,35 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.sdf
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Executables
+*.exe
+*.out
+*.app
+
+*.opensdf
+*.log
+*.ilk
+*.pdb
+*.tlog
+*.lastbuildstate
+*.idb
+*.iobj
+*.obj
+*.cso
+*.ipdb
+*.suo
+/DirectX12Render.VC.db
+
+x64/Intermediates/
