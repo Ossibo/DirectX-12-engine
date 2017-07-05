@@ -123,6 +123,8 @@ bool Scene::Frame(const float& dt)
 		m_currentModelForDisplay = 2;
 	if (m_input->IsKeyPressed(Keys::Three))
 		m_currentModelForDisplay = 3;
+	if (m_input->IsKeyPressed(Keys::Four))
+		m_currentModelForDisplay = 4;
 
 	if (m_input->IsKeyPressed(Keys::E))
 		m_simpleShader->ChangeWireFrame();
@@ -133,27 +135,24 @@ bool Scene::Frame(const float& dt)
 	//Render hte Graphics scene
 	result = Render();
 	ASSERT(result);
+	//m_model->SetRotation(XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f));
 
 	//ROTATE MODEL
 	m_model->SetRotation(XMFLOAT3(0.0f, m_model->GetRotation().y + dt * 0.2f, 0.0f));
 	m_oildrum->SetRotation(XMFLOAT3(0.0f, m_oildrum->GetRotation().y + dt * -0.2f, 0.0f));
-
 	//MOVE MODEL
 	//m_model->SetPosition(XMFLOAT3(0.0f, m_model->GetPosition().y + dt, 0.0f));
 
 	return true;
 }
 
-bool Scene::Render()
+// This is only to test what is nessessary and what order they need to be to work INGORE
+bool Scene::TestEnviormentForHowThingsWork()
 {
-	bool result;
-
-	//Use the Direct3D object to render the scene
-	result = m_direct3D->BeginScene(0.0f, 0.2f, 0.4f, 1.0f);
-	ASSERT(result);
 	ID3D12GraphicsCommandList* commandList = m_direct3D->GetCommandList();
 
 	m_model->m_worldMatrix = XMMatrixScaling(m_model->m_scale.x, m_model->m_scale.y, m_model->m_scale.z) * XMMatrixRotationX(m_model->m_rotation.x) * XMMatrixRotationY(m_model->m_rotation.y) * XMMatrixRotationZ(m_model->m_rotation.z) * XMMatrixTranslation(m_model->m_position.x, m_model->m_position.y, m_model->m_position.z);
+
 
 	///////////
 	//M_FLOOR//
@@ -167,8 +166,15 @@ bool Scene::Render()
 			commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_direct3D->m_backBufferRenderTarget[m_direct3D->m_bufferIndex], D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 			CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_direct3D->m_renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart(), m_direct3D->m_bufferIndex, m_direct3D->m_renderTargetViewDescriptorSize);
 			CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(m_direct3D->m_depthStencilViewHeap->GetCPUDescriptorHandleForHeapStart());
-
+			//float color[4];
+			//color[0] = 0.0f;
+			//color[1] = 0.2f;
+			//color[2] = 0.4f;
+			//color[3] = 1.0f;
 			commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+			//commandList->ClearRenderTargetView(rtvHandle, color, 0, nullptr);
+			//commandList->ClearDepthStencilView(m_direct3D->m_depthStencilViewHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
 		}
 
 		commandList->RSSetViewports(1, &m_direct3D->m_viewport);
@@ -199,6 +205,7 @@ bool Scene::Render()
 	}
 	m_direct3D->SignalFence();
 	m_direct3D->ResetAllocator();
+	
 	///////////
 	//M_MODEL//
 	///////////
@@ -213,10 +220,10 @@ bool Scene::Render()
 			commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 		}
 
-		commandList->RSSetViewports(1, &m_direct3D->m_viewport);
-		commandList->RSSetScissorRects(1, &m_direct3D->m_scissorRect);
 		commandList->SetPipelineState(m_simpleShader->m_pipelineState);
 		commandList->SetGraphicsRootSignature(m_simpleShader->m_rootSignature);
+		commandList->RSSetViewports(1, &m_direct3D->m_viewport);
+		commandList->RSSetScissorRects(1, &m_direct3D->m_scissorRect);
 
 		MyMesh* mesh = m_model->m_meshes[i];
 		MyMaterial* material = m_model->m_materials[mesh->m_materialIndex];
@@ -242,6 +249,7 @@ bool Scene::Render()
 	}
 	m_direct3D->SignalFence();
 	m_direct3D->ResetAllocator();
+	
 	/////////////
 	//M_OILDRUM//
 	/////////////
@@ -284,24 +292,43 @@ bool Scene::Render()
 		ID3D12CommandList* ppCommandLists[] = { commandList };
 		m_direct3D->m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 	}
-	//switch (m_currentModelForDisplay)
-	//{
-	//case 1:
-	//	m_model->Render(m_direct3D, m_simpleShader, m_camera);
-	//	m_floor->Render(m_direct3D, m_simpleShader, m_camera);
-	//	break;
+	return true;
+}
 
-	//case 2:
-	//	m_oildrum->Render(m_direct3D, m_simpleShader, m_camera);
-	//	break;
+bool Scene::Render()
+{
+	bool result;
 
-	//case 3:
-	//	m_floor->Render(m_direct3D, m_simpleShader, m_camera);
-	//	break;
+	//Use the Direct3D object to render the scene
+	result = m_direct3D->BeginScene(0.0f, 0.2f, 0.4f, 1.0f);
+	ASSERT(result);
 
-	//default:
-	//	break;
-	//}
+	//TestEnviormentForHowThingsWork();
+
+	// With the 1-4 on the keyboard to choose what should be displayed
+	switch (m_currentModelForDisplay)
+	{
+	case 1:
+		m_model->Render(m_direct3D, m_simpleShader, m_camera);
+		m_floor->Render(m_direct3D, m_simpleShader, m_camera);
+		break;
+
+	case 2:
+		m_oildrum->Render(m_direct3D, m_simpleShader, m_camera);
+		break;
+
+	case 3:
+		m_floor->Render(m_direct3D, m_simpleShader, m_camera);
+		break;
+	case 4:
+		m_floor->Render(m_direct3D, m_simpleShader, m_camera);
+		m_oildrum->Render(m_direct3D, m_simpleShader, m_camera);
+		m_model->Render(m_direct3D, m_simpleShader, m_camera);
+		break;
+
+	default:
+		break;
+	}
 
 	result = m_direct3D->EndScene();
 	ASSERT(result);

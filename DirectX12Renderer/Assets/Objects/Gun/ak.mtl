@@ -5,6 +5,7 @@ Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd Receiver.bmp
 map_bump Receiver_Normal.bmp
+map_Ks Specular.bmp
 Ni 1.00
 Ks 0.50 0.50 0.50
 newmtl blinn3SG
@@ -14,6 +15,7 @@ Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd Upper.bmp
 map_bump Upper_Normal.bmp
+map_Ks Specular.bmp
 Ni 1.00
 Ks 0.50 0.50 0.50
 newmtl blinn4SG
@@ -23,5 +25,6 @@ Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd Magazine.bmp
 map_bump Magazine_Normal.bmp
+map_Ks Specular.bmp
 Ni 1.00
 Ks 0.50 0.50 0.50

@@ -268,7 +268,6 @@ void Model::Render(Direct3DManager* direct, SimpleShader* shader, Camera* camera
 	ID3D12GraphicsCommandList* commandList = direct->GetCommandList();
 
 	m_worldMatrix = XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) * XMMatrixRotationX(m_rotation.x) * XMMatrixRotationY(m_rotation.y) * XMMatrixRotationZ(m_rotation.z) * XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
-	direct->ResetAllocator();
 	for (int i = 0; i < m_meshes.size(); ++i)
 	{
 		direct->OpenCommandList();
@@ -293,5 +292,6 @@ void Model::Render(Direct3DManager* direct, SimpleShader* shader, Camera* camera
 		shader->Render(direct, this, camera);
 		direct->ExecuteCommands();
 	}
-
+	direct->SignalFence();
+	direct->ResetAllocator();
 }

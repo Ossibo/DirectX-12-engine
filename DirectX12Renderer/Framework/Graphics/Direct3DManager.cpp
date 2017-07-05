@@ -331,10 +331,10 @@ bool Direct3DManager::EndScene()
 	HRESULT result;
 	unsigned long long fenceToWaitFor;
 
-	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_backBufferRenderTarget[m_bufferIndex], D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
-	m_commandList->Close();
-	ID3D12CommandList* ppCommandLists[] = { m_commandList };
-	m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+	//m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_backBufferRenderTarget[m_bufferIndex], D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	//m_commandList->Close();
+	//ID3D12CommandList* ppCommandLists[] = { m_commandList };
+	//m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 	
 	FAIL(SignalFence());
 
@@ -375,7 +375,7 @@ bool Direct3DManager::WaitForPreviousFrame()
 	}
 
 	// increment fenceValue for next frame
-	m_fenceValue[m_bufferIndex]++;
+	//m_fenceValue[m_bufferIndex]++;
 
 	return true;
 }

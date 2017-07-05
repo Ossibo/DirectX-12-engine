@@ -16,6 +16,8 @@
 #include "Graphics/Camera.h"
 #include "InputHandler.h"
 
+#include <cmath>
+
 /////////////
 // GLOBALS //
 /////////////
@@ -41,6 +43,7 @@ public:
 
 private:
 	bool Render();
+	bool TestEnviormentForHowThingsWork();
 
 private:
 	Direct3DManager* m_direct3D;

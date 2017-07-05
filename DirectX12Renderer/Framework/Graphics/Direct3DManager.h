@@ -56,8 +56,6 @@ public:
 	unsigned int GetBufferIndex() { return m_bufferIndex; }
 
 
-
-
 	int m_renderTargetViewDescriptorSize;
 	unsigned int m_bufferIndex;
 	ID3D12CommandQueue* m_commandQueue;
@@ -69,10 +67,13 @@ public:
 	D3D12_VIEWPORT m_viewport;
 	D3D12_RECT m_scissorRect;
 
-private:
-	bool WaitForPreviousFrame();
 
-private:
+
+//private:
+public:
+	bool WaitForPreviousFrame();
+//private:
+public:
 	bool m_vsync_enabled;
 	ID3D12Device* m_device;
 	char m_videoCardDescription[128];
@@ -83,8 +84,8 @@ private:
 	ID3D12GraphicsCommandList* m_commandList;
 	ID3D12RootSignature* m_rootSignature;
 	ID3D12Fence* m_fence[FRAME_BUFFER_COUNT];
-	HANDLE m_fenceEvent;
 	unsigned long long m_fenceValue[FRAME_BUFFER_COUNT];
+	HANDLE m_fenceEvent;
 
 	XMMATRIX m_projectionMatrix;
 	XMMATRIX m_worldMatrix;

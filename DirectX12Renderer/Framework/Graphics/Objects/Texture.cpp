@@ -309,7 +309,6 @@ void Texture::UploadTexture(Direct3DManager* direct)
 	// set the descriptor heap
 	ID3D12DescriptorHeap* descriptorDiffuseHeaps[] = { m_diffuseDescriptorHeap };
 	direct->GetCommandList()->SetDescriptorHeaps(_countof(descriptorDiffuseHeaps), descriptorDiffuseHeaps);
-
 	// set the descriptor table to the descriptor heap (parameter 1, as constant buffer root descriptor is parameter index 0)
 	direct->GetCommandList()->SetGraphicsRootDescriptorTable(m_bufferIndex, m_diffuseDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 }
