@@ -29,6 +29,7 @@
 *.cso
 *.ipdb
 *.suo
+.vs
 /DirectX12Render.VC.db
 
 x64/Intermediates/
