@@ -37,48 +37,39 @@ bool InputHandler::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, i
 
 	// Initialize the main direct input interface
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
-	if (FAILED(result))
-		return false;
+	FAIL(result);
 
 	// Initialize the direct input interface for the keyboard
 	result = m_directInput->CreateDevice(GUID_SysKeyboard, &m_keyboard, NULL);
-	if (FAILED(result))
-		return false;
+	FAIL(result);
 
 	// Set the data format.  In this case since it is a keyboard we can use the predefined data format.
 	result = m_keyboard->SetDataFormat(&c_dfDIKeyboard);
-	if (FAILED(result))
-		return false;
+	FAIL(result);
 
 	// Set the cooperative level of the keyboard to not share with other programs
 	result = m_keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
-	if (FAILED(result))
-		return false;
+	FAIL(result);
 
 	// Now acquire the keyboard
 	result = m_keyboard->Acquire();
-	if (FAILED(result))
-		return false;
+	FAIL(result);
 
 	// Initialize the direct interface for mouse
 	result = m_directInput->CreateDevice(GUID_SysMouse, &m_mouse, NULL);
-	if (FAILED(result))
-		return false;
+	FAIL(result);
 
 	// Set the data format for the mouse using the pre-defined mouse data format
 	result = m_mouse->SetDataFormat(&c_dfDIMouse);
-	if (FAILED(result))
-		return false;
+	FAIL(result);
 
 	// Set the cooperative level of the mouse to share with other programs
 	result = m_mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-	if (FAILED(result))
-		return false;
+	FAIL(result);
 
 	// Acquire the mouse
 	result = m_mouse->Acquire();
-	if (FAILED(result))
-		return false;
+	FAIL(result);
 
 	return true;
 }
@@ -89,13 +80,11 @@ bool InputHandler::Frame()
 
 	// Read the current state of the keyboard.
 	result = ReadKeyboard();
-	if (!result)
-		return false;
+	ASSERT(result);
 
 	// Read the current state of the mouse.
 	result = ReadMouse();
-	if (!result)
-		return false;
+	ASSERT(result);
 
 	// Process the changes in the mouse and keyboard.
 	ProcessInput();

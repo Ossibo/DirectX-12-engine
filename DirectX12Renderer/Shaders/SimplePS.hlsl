@@ -47,10 +47,7 @@ float4 main(PSIn input) : SV_TARGET
 	colorKa = float4(0, 0, 0, 1);
 	colorKd = float4(0, 0, 0, 1);
 	colorKs = float4(0, 0, 0, 1);
-	//input.texCoord.x = 1 - input.texCoord.x;
-	//input.texCoord.y = 1 - input.texCoord.y;
-	//input.texCoord.x *= 0.93f;
-	//input.texCoord.x -= 0.01f;
+
 	tex = texDiffuse.Sample(texSampler, input.texCoord);
 
 	bumpMap = texNormal.Sample(texSampler, input.texCoord);
@@ -58,8 +55,6 @@ float4 main(PSIn input) : SV_TARGET
 
 	bumpNormal = (bumpMap.x * N) + (bumpMap.y * T) + (bumpMap.z * B);
 	bumpNormal = normalize(bumpNormal);
-
-	//return float4(bumpNormal, 1.0f);
 
 	//Ambient
 	if (tex.w > 0)
@@ -70,8 +65,6 @@ float4 main(PSIn input) : SV_TARGET
 	{
 		colorKa = float4(Ka, 1.0f);
 	}
-
-	//return colorKa;
 
 	//Diffuse
 

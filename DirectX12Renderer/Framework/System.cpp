@@ -44,15 +44,13 @@ bool System::Initialize()
 	m_scene = new Scene();
 	if (!m_scene)
 	{
+		MessageBox(m_hwnd, L"Could not create m_scene.", L"Error", MB_OK);
 		return false;
 	}
 
 	//Initialize the scene object
 	result = m_scene->Initialize(screenHeight, screenWidth, m_hwnd, m_input);
-	if (!result)
-	{
-		return false;
-	}
+	ASSERT(result);
 
 	return true;
 }
@@ -120,10 +118,8 @@ bool System::Frame(const float& dt)
 
 	//Do the frame processing for the scene object
 	result = m_scene->Frame(dt);
-	if (!result)
-	{
-		return false;
-	}
+	ASSERT(result);
+
 	return true;
 }
 
@@ -228,6 +224,7 @@ void System::InitializeWindows(int& screenHeight, int& screenWidth)
 
 	ShowCursor(SHOW_CURSER);
 }
+
 void System::ShutdownWindows()
 {
 	//Show the mouse cursor
@@ -249,6 +246,7 @@ void System::ShutdownWindows()
 	//RELEASE the pointer to this class
 	ApplicationHandle = NULL;
 }
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	switch (umessage)

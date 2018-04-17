@@ -39,6 +39,7 @@ private:
 	HINSTANCE m_hinstance;
 	HWND m_hwnd;
 
+	// Our Main Objects
 	InputHandler* m_input;
 	Scene* m_scene;
 };

@@ -5,6 +5,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include <cmath>
 
 ///////////////////////
 // MY CLASS INCLUDES //
@@ -15,8 +16,6 @@
 #include "DirectX.h"
 #include "Graphics/Camera.h"
 #include "InputHandler.h"
-
-#include <cmath>
 
 /////////////
 // GLOBALS //
@@ -35,25 +34,31 @@ class Scene
 {
 public:
 	Scene();
-	Scene(const Scene& other);
 	~Scene();
 
 	bool Initialize(int screenHeight, int screenWidth, HWND hwnd, InputHandler* input);
 	bool Frame(const float& dt);
 
 private:
+
 	bool Render();
-	bool TestEnviormentForHowThingsWork();
+	void InputAlterations(const float& dt);
+	void UpdateModels(const float& dt);
 
 private:
-	Direct3DManager* m_direct3D;
+
+	// Objects Used by the scene
+	Direct3DManager * m_direct3D;
+	SimpleShader* m_simpleShader;
 	InputHandler* m_input;
+
+	// Objects in the scene
 	Model* m_model;
 	Model* m_floor;
 	Model* m_oildrum;
-	SimpleShader* m_simpleShader;
 	Camera* m_camera;
 
+	// Dictates what objects will be shown
 	int m_currentModelForDisplay;
 
 };

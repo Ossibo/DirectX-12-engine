@@ -115,8 +115,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="PixelShader.hlsl" />
-    <FxCompile Include="VertexShader.hlsl" />
     <FxCompile Include="Shaders\SimplePS.hlsl" />
     <FxCompile Include="Shaders\SimpleVS.hlsl" />
   </ItemGroup>

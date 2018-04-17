@@ -30,13 +30,11 @@ PSIn main(VSIn input)
 
 	// model-to-view
 	matrix MV = mul(viewMatrix, worldMatrix);
-	//matrix MV = mul(ModelToWorldMatrix, WorldToViewMatrix);
+
 	// model-to-projection
 	matrix MVP = mul(projectionMatrix, MV);
-	//matrix MVP = mul(MV, ProjectionMatrix);
-
+	
 	output.Position = mul(MVP, input.Position);
-	//output.Normal = mul(MV, input.Normal);
 	output.texCoord = input.texCoord;
 	output.worldPos = mul(worldMatrix, input.Position);
 
@@ -46,14 +44,6 @@ PSIn main(VSIn input)
 	output.binormal = normalize(output.binormal);
 	output.tangent = mul(worldMatrix, input.tangent);
 	output.tangent = normalize(output.tangent);
-
-	//output.Position = mul(worldMatrix, input.Position);
-	//output.Position = mul(viewMatrix, output.Position);
-	//output.Position = mul(projectionMatrix, output.Position);
-	//output.texCoord = input.texCoord;
-	////output.Position = mul(input.Position, worldMatrix);
-	////output.Position = mul(output.Position, viewMatrix);
-	////output.Position = mul(output.Position, projectionMatrix);
 
 	return output;
 }

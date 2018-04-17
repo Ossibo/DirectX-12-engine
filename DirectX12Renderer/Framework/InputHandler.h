@@ -16,11 +16,12 @@
 // INCLUDES //
 //////////////
 #include <dinput.h>
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
 #include "DirectX.h"
 
-////////////////////////////////////////////////////////////////////////////////
-// Class name: InputHandler
-////////////////////////////////////////////////////////////////////////////////
 enum Keys {
 	Left = DIK_LEFT,
 	Right = DIK_RIGHT,
@@ -69,10 +70,10 @@ private:
 	IDirectInputDevice8* m_keyboard;
 	IDirectInputDevice8* m_mouse;
 
+	// Current states
 	bool m_activeState[256];
 	unsigned char m_keyboardState[256];
 	DIMOUSESTATE m_mouseState;
-
 	int m_screenWidth, m_screenHeight;
 	int m_mouseX, m_mouseY;
 };
