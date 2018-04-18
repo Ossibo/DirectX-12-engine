@@ -17,6 +17,8 @@ Model::Model()
 Model::~Model()
 {
 }
+
+// Gets the Directory Path from a String
 std::string GetDirectoryPath(std::string sFilePath)
 {
 	// Get directory path
@@ -31,6 +33,8 @@ std::string GetDirectoryPath(std::string sFilePath)
 	}
 	return sDirectory;
 }
+
+// This convertes a std::string to a std::wstring
 std::wstring s2ws(const std::string& str)
 {
 	int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
@@ -44,6 +48,7 @@ bool Model::Initialize(Direct3DManager* direct, std::string sFilePath)
 	ID3D12GraphicsCommandList* commandList = direct->GetCommandList();
 	HRESULT result;
 
+	// Assimp is used to import the .obj models
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(sFilePath,
 											aiProcess_CalcTangentSpace |
@@ -63,11 +68,14 @@ bool Model::Initialize(Direct3DManager* direct, std::string sFilePath)
 											aiProcess_FlipUVs |
 											aiProcess_FlipWindingOrder |
 											0);
+	
+	// Can have multiple materials on the model
 	for (int i = 0; i < scene->mNumMaterials; ++i)
 	{
 		MyMaterial* newMaterial = new MyMaterial();
 		const aiMaterial* material = scene->mMaterials[i];
 		
+		// Setting the base Ka, Kd and Ks
 		aiColor3D color;
 		if (material->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS);
 		{
@@ -83,6 +91,8 @@ bool Model::Initialize(Direct3DManager* direct, std::string sFilePath)
 		}
 		
 		aiString path;  // filename
+
+		// Here we load in the materials used by the model
 		if ((material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS))
 		{
 			newMaterial->m_diffuseTexture = new Texture();
@@ -255,10 +265,6 @@ bool Model::Initialize(Direct3DManager* direct, std::string sFilePath)
 		newMesh->m_indexBufferView.SizeInBytes = iBufferSize;
 
 		m_meshes.push_back(newMesh);
-
-		// Now we execute the command list to upload the initial assets (triangle data)
-
-
 	}
 	return true;
 }
@@ -268,6 +274,8 @@ void Model::Render(Direct3DManager* direct, SimpleShader* shader, Camera* camera
 	ID3D12GraphicsCommandList* commandList = direct->GetCommandList();
 
 	m_worldMatrix = XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) * XMMatrixRotationX(m_rotation.x) * XMMatrixRotationY(m_rotation.y) * XMMatrixRotationZ(m_rotation.z) * XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
+	
+	// For every mesh in the model we have to upload the textures and draw
 	for (int i = 0; i < m_meshes.size(); ++i)
 	{
 		direct->OpenCommandList();
@@ -276,6 +284,7 @@ void Model::Render(Direct3DManager* direct, SimpleShader* shader, Camera* camera
 		MyMesh* mesh = m_meshes[i];
 		MyMaterial* material = m_materials[mesh->m_materialIndex];
 
+		// Setting the materials
 		if (material->m_diffuseTexture)
 			material->m_diffuseTexture->UploadTexture(direct);
 
@@ -285,10 +294,12 @@ void Model::Render(Direct3DManager* direct, SimpleShader* shader, Camera* camera
 		if (material->m_specularTexture)
 			material->m_specularTexture->UploadTexture(direct);
 	
+		// Setting the Vertex and Index
 		commandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 		commandList->IASetVertexBuffers(0, 1, &mesh->m_vertexBufferView);
 		commandList->IASetIndexBuffer(&mesh->m_indexBufferView);
+		
+		// Render the model
 		shader->Render(direct, this, camera);
 		direct->ExecuteCommands();
 	}

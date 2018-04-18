@@ -22,7 +22,6 @@ class System
 {
 public:
 	System();
-	System(const System& other);
 	~System();
 	bool Initialize();
 	void Run();
